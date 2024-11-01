@@ -33,12 +33,13 @@ class Phone(Field):
 class Birthday(Field):
     def __init__(self, value):
         try:
-            self.value = datetime.strptime(value, '%d.%m.%Y').date()
+            datetime.strptime(value, '%d.%m.%Y')
+            self.value = value
         except ValueError:
             raise ValueError(log_error("Invalid date format. Use DD.MM.YYYY"))
     
     def get_date(self):
-        return self.value
+        return datetime.strptime(self.value, '%d.%m.%Y').date()
 
 class Record:
     def __init__(self, name):
@@ -73,7 +74,7 @@ class Record:
         return None
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday.get_date().strftime('%d.%m.%Y') if self.birthday else ''}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday if self.birthday else ''}"
 
 class AddressBook(UserDict):
     def add_record(self,record):
